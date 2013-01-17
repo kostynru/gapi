@@ -1,0 +1,17 @@
+*.class
+*.pyc
+*.pyo
+api.sql.bak
+configurating.jpg
+config.php.bak
+hash.php.bak
+index.php.bak
+index.php.bak~
+index.php~
+letter_as_time.php
+letter_as_time.php.bak
+license.txt.bak
+manual.txt.bak
+Thumbs.db
+ver_notes.txt.bak
+site

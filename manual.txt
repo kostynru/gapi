@@ -1,0 +1,178 @@
+-----ИНСТРУКЦИЯ ПО ИСРОЛЬЗОВАНИЮ GettingAPI Realise Version-----
+
+СИСТЕМНЫЕ ТРЕБОВАНИЯ
+
+1. Сервер со следующими харрактеристиками:
+а) PHP >= 5.4 (возможна работа с PHP 5.3)
+б) MySQL >= 5.4
+
+
+ОСНОВНАЯ ИНФОРМАЦИЯ ОБ ИСПОЛЬЗОВАНИИ API
+
+1. Все запросы к API осуществляются через HTTP, параметры передаются посредством GET запроса.
+
+2. Авторизация:
+Для авторизации приложения и получения уникального ключа, клиент должен быть заранее внесен в базу apps и apps_access. 
+При авторизации API должны быть переданы параметры в следующем виде:
+
+| www.example.com/api/auth?app_id=номер_приложения&app_key=ключ_приложения&response=тип_ответа
+
+В случае успешной авторизации, будет выдан ответ в виде XML или JSON (в зависимости от выбранного вами типа ответа). 
+Пример ответа в формате XML:
+
+| <api>
+|	 <auth>
+|	 	<answer>Уникальный_ключ</answer>
+|	 </auth>	
+| </api>
+
+3. Обращение к методам API:
+Обращение к API производится следующим образом:
+
+| www.example.com/api/область_метода.имя_метода?дополнительные_параметры&token=уникальный_ключ
+| Пример: www.example.com/api/application.about?token=12345
+| Будет вызван метод about из пространства application.
+
+
+Вместо строки дополнительные_параметры должны быть переданы параметры в стандартном виде, если этого требует конкретный 
+метод или область.Ответ от сервера будет получен в указаном при авторизации виде.
+
+4. Создание областей и методов:
+Все области расположены в директории spaces, в корне API. Файл с методами носит название области в виде 
+'имя_области.php'. Для объявления методов используется ООП. Структура файла выглядит так:
+
+| <?php
+| class Имя_области {
+| //Далее методы
+| }
+
+Начиная с версии Realise Version вы можете создавать методы в виде простых функций. Файл с методами носит название 
+области в виде 'имя_области.php'. Функции объявляются стандартно, именем функций должна быть строка, начинающаяся с
+строчной буквы:
+
+| <?php
+| function имя_функции(){
+| 	//Код функции
+| }
+
+!ВНИМАНИЕ! Обратите ваше внимание на то, что имя класса (пространства) при объявлении должно начинаться с заглавной 
+буквы !ВНИМАНИЕ!  Все методы к которым будет производиться обращение из вне, должны иметь доступность public. Пример 
+объявления метода:
+
+| <?php
+| class Имя_области {
+| 	public function имя_метода() {
+|    //Код метода
+|   }
+| }
+
+5. Начиная с версии Realise Version массивы возвращаются кооректно как в json, так и в xml. При возврате многомерного
+массива в XML, теги, внутри которых находятся другие теги, имеют следующий вид - <arr result='значение'>...</arr>, где 
+'значение' - индекс массива.
+--------------------------------------------------------------------------------------------
+Все интересующие Вас вопросы Вы сможете задать на странице проекта.
+
+ОСНОВНАЯ ИНФОРМАЦИЯ О БАЗЕ ДАННЫХ
+
+1. Для установки базы данных вы можете воспользоваться файлом api.sql, установив его на вашу базу данных.
+2. Дамп для установки базы данных:
+
+-------------------------------------
+
+
+
+SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for `api_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `api_info`;
+CREATE TABLE `api_info` (
+  `api_ver` varchar(250) NOT NULL,
+  `api_creator` varchar(250) NOT NULL,
+  `api_owner` varchar(250) NOT NULL,
+  `copyrights` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `api_users`
+-- ----------------------------
+DROP TABLE IF EXISTS `api_users`;
+CREATE TABLE `api_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(250) NOT NULL,
+  `pass` varchar(250) NOT NULL,
+  `email` varchar(250) NOT NULL,
+  PRIMARY KEY (`id`,`login`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `apps`
+-- ----------------------------
+DROP TABLE IF EXISTS `apps`;
+CREATE TABLE `apps` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  `url` varchar(250) DEFAULT NULL,
+  `owner_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `apps_access`
+-- ----------------------------
+DROP TABLE IF EXISTS `apps_access`;
+CREATE TABLE `apps_access` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_` varchar(0) DEFAULT NULL,
+  `private_key` varchar(250) NOT NULL,
+  `app_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`private_key`,`app_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `apps_response_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `apps_response_type`;
+CREATE TABLE `apps_response_type` (
+  `id` int(11) NOT NULL,
+  `response_type` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`,`response_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `apps_sessions`
+-- ----------------------------
+DROP TABLE IF EXISTS `apps_sessions`;
+CREATE TABLE `apps_sessions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_id` int(11) NOT NULL,
+  `datastamp` varchar(250) NOT NULL DEFAULT '',
+  `app_token` varchar(250) NOT NULL,
+  `response_type` int(1) NOT NULL,
+  PRIMARY KEY (`id`,`app_id`,`app_token`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+
+
+-------------------------------
+Вы всегда можете скачать последнюю версию дампа базы данных со страницы проекта - vk.com/gettingapi
+
+
+--------------------------------------------------------------------------------------------
+Все интересующие Вас вопросы Вы можете задать на странице проекта.
+
+
+Разработчик и владелец авторских прав на GettingAPI - Шелко Константин. По вопросом сотрудничества обращаться по адресу 
+kostynru@ymail.com.
+Особые благодарности:
+Кузнецова Анастасия - идея логотипа
+Платунин Иван - просто хороший человек
+Коллектив Vlane.net - всегда помогали добрым советом.
+Без вас не было бы этого проекта, спасибо.
+
+Временная страница проекта - vk.com/gettingapi
+--------------------------------------------------------------------------------------------
+2012 (C) Shelko Konstantin
+
+----------- You can find the english version of this manual on project's page. -----------
+------------------------------------------------------------------------------------------------------------------------

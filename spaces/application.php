@@ -1,0 +1,51 @@
+<?php
+class Application {
+	public function __construct(){
+		mysql_connect('localhost', 'root', '');
+		mysql_select_db('api');
+	}
+	public function key_expire(){
+		$sp_params = $_GET;
+		$token = $sp_params['token'];
+		$query = "SELECT * FROM apps_sessions WHERE app_token = '$token'";
+		$result = mysql_query($query) or die(mysql_error());
+		while($row = mysql_fetch_row($result)){
+			$data_exp = $row[2];
+		}
+		$expire = $data_exp+3600;
+		$response = date(DATE_RFC1123, $expire);
+		return $response;
+	}
+	public function close_session(){
+		$sp_params = $_GET;
+		$token = $sp_params['token'];
+		$query = "DELETE FROM apps_sessions WHERE app_token = '$token'";
+		$result = mysql_query($query) or die(mysql_error());
+		return true;
+	}
+	public function about(){
+		$sp_params = $_GET;
+		$token = $sp_params['token'];
+		$resp = array();
+		$query = "SELECT * FROM apps JOIN apps_sessions ON apps_sessions.app_token = '$token' WHERE apps.id = apps_sessions.app_id";
+		$result = mysql_query($query) or die(mysql_error());
+		while($row = mysql_fetch_array($result)){
+			$resp['app_id'] = $row[0];
+			$resp['app_title'] = $row[1];
+			$resp['app_url'] = $row[2];
+		}
+		return $resp;
+	}
+	public function apps(){
+		$sp_params = $_GET;
+		$token = $sp_params['token'];
+		$resp = array();
+		$query = "SELECT * FROM apps";
+		$result = mysql_query($query) or die(mysql_error());
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			$resp[] = $row;
+		}
+		return $resp;
+	}
+	
+}

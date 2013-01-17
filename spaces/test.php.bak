@@ -1,0 +1,13 @@
+<?php
+function hello(){
+	$answer = 'hello';
+	return $answer;
+}
+function array_ret(){
+	$answer = array('Robert', 'Ann', 'Michael');
+	return $answer;
+}
+function array_multi(){
+	$answer = array([1] => [array('Robert')], [2] => [array('Ann')]);
+	return $answer;
+}

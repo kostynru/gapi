@@ -1,0 +1,21 @@
+<aml version="1.0">
+	<!-- There're headers !-->
+	<aml ctype="headers">
+		<field ctype="param" name="foo">Foo</field>
+		<!-- or this !-->
+		<field ctype="param" name="foo" value="Foo" />
+		<!-- or this !-->
+		<field ctype="param">
+			<field ctype="param-name">foo</field>
+			<field ctype="param-value">Foo</field>
+		</field>
+	</aml>
+	<!-- End of Headers !-->
+	<!-- There're answers !-->
+	<aml ctype="content">
+	
+	
+	
+	</aml>
+	<!-- End of answers !-->
+</aml>
