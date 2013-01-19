@@ -1,25 +1,20 @@
-<?php
+п»ї<?php
 // Getting API - Realise Version 
 // Copyright (C) 2012 Shelko Konstantin
-// Все права на данный файл пренадлежат Шелко Константину.
-// По вопросам сотрудничества обращаться по адресам:
+// If you want to help me, please, write:
 // kostynru@ymail.com
 // vk.com/shelko_kostya
 // vk.com/gettingapi
 // -----------------------------------------------------------
 // It's main file of Getting API. Please don't edit it manualy.
 // You may only edit database connection options.
-// -----------------------------------------------------------
-// Это главный файл Getting API. Пожалуйста, не редактируйте
-// его вручную. Вы можете изменять только настройки подключения
-// к базе данных. Они выделенны комментариями
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('BASE_CLASS', true);
 if(count($_GET) and isset($_GET['q'])){
-//Настройки подключения к базе данных
+//Database connetcion configurating
 mysql_connect('localhost', 'root', '');
 mysql_select_db('api');
-//Конец настроек подключения к базе данных
+//End of user-cofurable part!
 //Warning!! Hardcode is beginig here!!!
 } else {
 header('Content-type: application/xml');
@@ -37,6 +32,7 @@ $spaceandmethod = explode(".", $params['q']);
 $space = $spaceandmethod[0];
 @$method = $spaceandmethod[1];
 $time = time();
+//Errors' visualating function
 function error_to_xml($error_code = '1', $type = 'xml'){
 	$error_codes = array(
 					1 => "Unknown error has been encountered",
@@ -76,6 +72,7 @@ function safe_param($string){
 	$string = preg_replace('/\s/', '', $string);
 	return $string;
 }
+//If param is 'auth' - begin the auth process
 if($params['q'] == 'auth'){
 	$app_key = $params['app_key'];
 	$app_id = $params['app_id'];
@@ -137,6 +134,7 @@ if($params['q'] == 'auth'){
 		error_to_xml(6, $response_type);
 		exit;
 	}
+//Else, begin to call to the method
 } else {
 	$l_space = ucfirst($space);
 	if(file_exists("spaces/$space.php")){
@@ -186,6 +184,7 @@ if($params['q'] == 'auth'){
 		}
 		if(is_array($answer)){
 			if($response == 1){
+			//Encoding answer in XML
 				header('Content-type: application/xml');
 				echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>
 							<api type=\"gettingapi\">
@@ -212,12 +211,14 @@ if($params['q'] == 'auth'){
 				</api>";
 				exit;
 			} else {
+			//Encoding answer in JSON
 				header('Content-type: application/json');
 				$content = array('api' => array('answer' => $answer));
 				echo json_encode($content);
 				exit;
 			}
 		} else {
+		//Encoding answer in XML
 			if($response == 1){
 				header('Content-type: application/xml');
 				echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>
@@ -230,6 +231,7 @@ if($params['q'] == 'auth'){
 						</api>";
 				exit;
 			} elseif ($response == 2){
+			//Encoding answer in JSON
 				$content = array('api' => array('answer' => $answer));
 				header('Content-type: application/json');
 					echo json_encode($content);

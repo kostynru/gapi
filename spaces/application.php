@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class Application {
 	public function __construct(){
 		mysql_connect('localhost', 'root', '');
