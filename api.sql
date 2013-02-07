@@ -17,7 +17,6 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `api_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `api_info`;
 CREATE TABLE `api_info` (
   `api_ver` varchar(250) NOT NULL,
   `api_creator` varchar(250) NOT NULL,
@@ -29,7 +28,6 @@ UPDATE api_info SET api_ver = 'Realise Version', api_creator = 'Shelko Kostya', 
 -- ----------------------------
 -- Table structure for `api_users`
 -- ----------------------------
-DROP TABLE IF EXISTS `api_users`;
 CREATE TABLE `api_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(250) NOT NULL,
@@ -41,7 +39,6 @@ CREATE TABLE `api_users` (
 -- ----------------------------
 -- Table structure for `apps`
 -- ----------------------------
-DROP TABLE IF EXISTS `apps`;
 CREATE TABLE `apps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -53,7 +50,6 @@ CREATE TABLE `apps` (
 -- ----------------------------
 -- Table structure for `apps_access`
 -- ----------------------------
-DROP TABLE IF EXISTS `apps_access`;
 CREATE TABLE `apps_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `app_` varchar(0) DEFAULT NULL,
@@ -65,7 +61,6 @@ CREATE TABLE `apps_access` (
 -- ----------------------------
 -- Table structure for `apps_response_type`
 -- ----------------------------
-DROP TABLE IF EXISTS `apps_response_type`;
 CREATE TABLE `apps_response_type` (
   `id` int(11) NOT NULL,
   `response_type` varchar(10) NOT NULL,
@@ -75,7 +70,6 @@ CREATE TABLE `apps_response_type` (
 -- ----------------------------
 -- Table structure for `apps_sessions`
 -- ----------------------------
-DROP TABLE IF EXISTS `apps_sessions`;
 CREATE TABLE `apps_sessions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `app_id` int(11) NOT NULL,

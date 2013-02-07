@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 This's the main api class. Please, don't edit or delete it.
 */

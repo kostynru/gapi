@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Getting API - Realise Version 
 // Copyright (C) 2012 Shelko Konstantin
 // If you want to help me, please, write:
@@ -14,7 +14,7 @@ if(count($_GET) and isset($_GET['q'])){
 //Database connetcion configurating
 mysql_connect('localhost', 'root', '');
 mysql_select_db('api');
-//End of user-cofurable part!
+//End of user-cofigurable part!
 //Warning!! Hardcode is beginig here!!!
 } else {
 header('Content-type: application/xml');
