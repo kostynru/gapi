@@ -140,7 +140,7 @@ if($params['q'] == 'auth'){
 } else {
 	$l_space = ucfirst($space);
     if($space == 'store'){
-        goto store;
+        goto store; //Дикий костыль!
     }
 	if(file_exists("spaces/$space.php")){
 		include_once '/spaces/'.$space.'.php';
