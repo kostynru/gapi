@@ -78,3 +78,18 @@ CREATE TABLE `apps_sessions` (
   `response_type` int(1) NOT NULL,
   PRIMARY KEY (`id`,`app_id`,`app_token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `s_procedures`
+-- ----------------------------
+CREATE TABLE `s_procedures` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method` varchar(25) NOT NULL,
+  `token` varchar(25) NOT NULL,
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of s_procedures
+-- ----------------------------
