@@ -1,7 +1,7 @@
 <?php
 //There's class of storable procedures.
 final class Storable {
-    public function __construct(){
+    public function store(){
         $procedure = $_GET['q'];
         $token = $_GET['token'];
         $time = time();
@@ -27,5 +27,4 @@ final class Storable {
             return false;
         }
     }
-
 }

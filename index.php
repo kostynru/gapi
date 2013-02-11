@@ -42,7 +42,9 @@ function error_to_xml($error_code = '1', $type = 'xml'){
 					5 => "The key has expired or session has been closed",
 					6 => "Invalid application id or secret key",
 					7 => "Required space does not exist",
-					8 => "Hmm...you are dunkey");
+					8 => "Hmm...you are donkey",
+                    9 => "Storable procedure does not exist",
+                    10 => "Storable procedure has expired");
 	$err_msg = $error_codes[$error_code];
 	$time = time();
 	if($type == null or empty($type) or $type == 'xml'){
@@ -137,6 +139,9 @@ if($params['q'] == 'auth'){
 //Else, begin to call to the method
 } else {
 	$l_space = ucfirst($space);
+    if($space == 'store'){
+        goto store;
+    }
 	if(file_exists("spaces/$space.php")){
 		include_once '/spaces/'.$space.'.php';
 		$method_ex = array($l_space, $method);
@@ -176,12 +181,74 @@ if($params['q'] == 'auth'){
 			echo error_to_xml(5,$err_resp);
 			exit;
 		}
+        if(isset($_GET['store'])){
+            include_once 'api_class\storable_methods.php';
+            $st = new Storable();
+            $st->store();
+            exit;
+        }
+        if($space = 'storable'){
+            store:
+            $query = sprintf("SELECT * FROM apps_sessions WHERE app_token = '%s'",
+                mysql_real_escape_string($token));
+            $result = mysql_query($query) or die(mysql_error());
+            if($result == false){
+                echo error_to_xml(5,$response_type);
+                exit;
+            }
+            while($row = mysql_fetch_assoc($result)){
+                $response = $row['response_type'];
+                $date = $row['datastamp'];
+                $app_id = $row['app_id'];
+            }
+            switch($response){
+                case '1':
+                    $err_resp = 'xml';
+                    break;
+                case '2':
+                    $err_resp = 'json';
+                    break;
+                default:
+                    $err_resp = 'xml';
+            }
+            include_once 'api_class\storable_methods.php';
+            $st = new Storable();
+            if($method = 'expired'){
+                $exp = $st->is_expired(safe_param($_GET['token']));
+                if($err_resp == 'xml'){
+                    header('Content-type: application/xml');
+                    echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>
+                            <api type=\"gettingapi\">
+                            <store>
+                            <answer time=\"$time\">$exp</answer>
+                            </store>
+                            </api>";
+                    exit;
+                } else {
+                    header('Content-type: application/json');
+                    echo json_encode($exp);
+                    exit;
+                }
+            }
+        }
 		if (class_exists($space)){
 			$process = new $l_space;
 			$answer = $process->$method($params);
 		} else {
 			$answer = $method();
 		}
+        function multidem_array_to_xml(array $arr) {
+            foreach($arr as $key => $value){
+                if(is_array($value)){
+                    echo "<array key=\"$key\">";
+                    multidem_array_to_xml($value);
+                    echo "</array>";
+                } else {
+                    echo "<$key>$value</$key>";
+                }
+            }
+            return null;
+        }
 		if(is_array($answer)){
 			if($response == 1){
 			//Encoding answer in XML
@@ -191,18 +258,6 @@ if($params['q'] == 'auth'){
 							<$space>
 								<$method>
 								<answer time=\"$time\">";
-				function multidem_array_to_xml(array $arr) {
-					foreach($arr as $key => $value){
-						if(is_array($value)){
-							echo "<array key=\"$key\">";
-							multidem_array_to_xml($value);
-							echo "</array>";
-						} else {
-							echo "<$key>$value</$key>";
-						}
-					}
-					return null;
-				}		
 				multidem_array_to_xml($answer);
 				echo "
 								</answer>
