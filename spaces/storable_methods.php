@@ -27,4 +27,13 @@ final class Storable {
             return false;
         }
     }
+    public function is_set($token){
+        $query = "SELECT * FROM s_procedures WHERE token = '$token'";
+        $result = mysql_query($query);
+        if(empty($result)){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
